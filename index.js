@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import authorRoutes from './src/routes/authors.js';
 import postRoutes from './src/routes/posts.js';
 import connectDB from "./src/config/database.js";
+import mongoose from "mongoose";
 
 connectDB();
 
@@ -30,4 +31,12 @@ app.use((err, req, res, next) => {
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
+});
+
+mongoose.connection.on('error', (err) => {
+    console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('MongoDB disconnected');
 });
