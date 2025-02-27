@@ -1,4 +1,3 @@
-// src/controllers/authorController.js
 import { validationResult } from "express-validator";
 import { registerNewAuthor } from "../../services/authorServices/authorRegisterService.js";
 import { loginAuthor } from "../../services/authorServices/authorLoginService.js";
