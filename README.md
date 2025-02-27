@@ -11,6 +11,19 @@ A RESTful API backend for a blog platform built with Node.js and Express, featur
 - Error handling
 - Unit testing
 
+# Node Blog Backend
+
+A RESTful API backend for a blog platform built with Node.js and Express, featuring author authentication and post management.
+
+## Features
+
+- Author authentication (register, login, logout)
+- Author management (CRUD operations)
+- Blog post management
+- Input validation
+- Error handling
+- Unit testing
+
 ## Prerequisites
 
 - Node.js (>= 14.x)
