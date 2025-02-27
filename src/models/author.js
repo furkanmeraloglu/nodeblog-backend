@@ -33,7 +33,6 @@ const authorSchema = new mongoose.Schema({
     },
     updatedAt: {
         type: Date,
-        default: Date.now
     }
 });
 
