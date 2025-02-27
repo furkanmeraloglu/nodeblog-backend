@@ -11,7 +11,7 @@ This is a simple Node.js backend project using Express.
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/yourusername/node-blog-backend.git
+   git clone https://github.com/furkanmeraloglu/node-blog-backend.git
    cd node-blog-backend
 
 2. Install dependencies:
