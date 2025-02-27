@@ -6,7 +6,6 @@ let mockAuthorConstructor;
 let bcryptMock;
 
 beforeAll(async () => {
-    // Mock the Author model
     mockSave = jest.fn();
     mockAuthorConstructor = jest.fn().mockImplementation(() => ({
         save: mockSave
@@ -16,7 +15,6 @@ beforeAll(async () => {
         default: mockAuthorConstructor
     }));
 
-    // Mock bcrypt with named exports
     bcryptMock = {
         hash: jest.fn().mockImplementation((password, saltRounds) =>
             Promise.resolve(`hashed_${password}`)
@@ -24,11 +22,9 @@ beforeAll(async () => {
     };
 
     jest.unstable_mockModule('bcrypt', () => ({
-        // Export hash as a named export
         hash: jest.fn().mockImplementation((password, saltRounds) =>
             Promise.resolve(`hashed_${password}`)
         ),
-        // Also provide a default export for default import usage
         default: {
             hash: jest.fn().mockImplementation((password, saltRounds) =>
                 Promise.resolve(`hashed_${password}`)
@@ -36,7 +32,6 @@ beforeAll(async () => {
         }
     }));
 
-    // Import the service after mocking dependencies
     const authorRegisterService = await import('../../../services/authorServices/authorRegisterService');
     registerNewAuthor = authorRegisterService.registerNewAuthor;
 });
@@ -48,7 +43,6 @@ describe('authorRegisterService', () => {
 
     describe('registerNewAuthor', () => {
         it('should create a new author with hashed password', async () => {
-            // Arrange
             const authorData = {
                 name: 'John Doe',
                 username: 'johndoe',
@@ -63,10 +57,8 @@ describe('authorRegisterService', () => {
                 _id: 'some-id'
             });
 
-            // Act
             const result = await registerNewAuthor(authorData);
 
-            // Assert
             expect(mockAuthorConstructor).toHaveBeenCalledWith({
                 name: authorData.name,
                 username: authorData.username,
@@ -81,9 +73,7 @@ describe('authorRegisterService', () => {
             });
         });
 
-        // Fix the second test to properly access the mocked bcrypt function
         it('should use bcrypt to hash password with salt rounds of 10', async () => {
-            // Arrange
             const authorData = {
                 name: 'Jane Doe',
                 username: 'janedoe',
@@ -93,17 +83,13 @@ describe('authorRegisterService', () => {
 
             mockSave.mockResolvedValue({});
 
-            // Act
             await registerNewAuthor(authorData);
 
-            // Assert
-            // Use the default export mock since that's what the service is using
             const bcryptMock = await import('bcrypt');
             expect(bcryptMock.default.hash).toHaveBeenCalledWith(authorData.password, 10);
         });
 
         it('should throw an error when author creation fails', async () => {
-            // Arrange
             const authorData = {
                 name: 'Error User',
                 username: 'erroruser',
@@ -114,7 +100,6 @@ describe('authorRegisterService', () => {
             const errorMessage = 'Duplicate email';
             mockSave.mockRejectedValue(new Error(errorMessage));
 
-            // Act & Assert
             await expect(registerNewAuthor(authorData)).rejects.toThrow(errorMessage);
         });
     });

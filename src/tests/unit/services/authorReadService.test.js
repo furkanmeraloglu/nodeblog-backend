@@ -1,19 +1,15 @@
 import {jest, describe, afterEach, afterAll, beforeAll, it, expect} from '@jest/globals';
-import mongoose from 'mongoose';
 
-// Mock setup using unstable_mockModule for ESM
 let getAllAuthors;
 let getAuthorById;
 let NotFoundError;
 let mockFind;
 let mockFindById;
 
-// Mock setup before importing the tested modules
 beforeAll(async () => {
     mockFind = jest.fn();
     mockFindById = jest.fn();
 
-    // Mock the Author model
     jest.unstable_mockModule('../../../models/author.js', () => ({
         default: {
             find: mockFind,
@@ -21,7 +17,6 @@ beforeAll(async () => {
         }
     }));
 
-    // Mock NotFoundError
     NotFoundError = class extends Error {
         constructor(message) {
             super(message);
@@ -34,7 +29,6 @@ beforeAll(async () => {
         NotFoundError
     }));
 
-    // Import modules after mocking
     const authorService = await import('../../../services/authorServices/authorReadService.js');
     getAllAuthors = authorService.getAllAuthors;
     getAuthorById = authorService.getAuthorById;

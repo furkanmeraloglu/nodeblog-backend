@@ -1,13 +1,11 @@
 import {jest, describe, beforeAll, afterEach, it, expect} from '@jest/globals';
 
-// Set up mocks and service reference
 let updateAuthorById;
 let mockFindById;
 let mockFindByIdAndUpdate;
 let mockSelect;
 
 beforeAll(async () => {
-  // Mock the Author model
   mockSelect = jest.fn();
   mockFindByIdAndUpdate = jest.fn().mockImplementation(() => ({
     select: mockSelect
@@ -21,7 +19,6 @@ beforeAll(async () => {
     }
   }));
 
-  // Mock bcrypt
   jest.unstable_mockModule('bcrypt', () => ({
     default: {
       hash: jest.fn().mockImplementation((password, saltRounds) =>
@@ -30,7 +27,6 @@ beforeAll(async () => {
     }
   }));
 
-  // Mock system error exceptions
   jest.unstable_mockModule('../../../exceptions/systemErrorExceptions', () => ({
     NotFoundError: class NotFoundError extends Error {
       constructor(message) {
@@ -41,7 +37,6 @@ beforeAll(async () => {
     }
   }));
 
-  // Import the service after mocking dependencies
   const authorUpdateService = await import('../../../services/authorServices/authorUpdateService');
   updateAuthorById = authorUpdateService.updateAuthorById;
 });
@@ -53,7 +48,6 @@ describe('authorUpdateService', () => {
 
   describe('updateAuthorById', () => {
     it('should update an author with provided data', async () => {
-      // Arrange
       const authorId = 'author123';
       const updateData = {
         name: 'Updated Name',
@@ -66,10 +60,8 @@ describe('authorUpdateService', () => {
       mockFindById.mockResolvedValue(mockAuthor);
       mockSelect.mockResolvedValue(updatedAuthor);
 
-      // Act
       const result = await updateAuthorById(authorId, updateData);
 
-      // Assert
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
         authorId,
@@ -85,7 +77,6 @@ describe('authorUpdateService', () => {
     });
 
     it('should hash password if it is included in update data', async () => {
-      // Arrange
       const authorId = 'author456';
       const updateData = {
         name: 'New Name',
@@ -98,10 +89,8 @@ describe('authorUpdateService', () => {
 
       const bcryptMock = await import('bcrypt');
 
-      // Act
       await updateAuthorById(authorId, updateData);
 
-      // Assert
       expect(bcryptMock.default.hash).toHaveBeenCalledWith('newPassword123', 10);
       expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
         authorId,
@@ -115,13 +104,11 @@ describe('authorUpdateService', () => {
     });
 
     it('should throw NotFoundError if author does not exist', async () => {
-      // Arrange
       const authorId = 'nonExistentAuthor';
       const updateData = { name: 'New Name' };
 
       mockFindById.mockResolvedValue(null);
 
-      // Act & Assert
       await expect(updateAuthorById(authorId, updateData)).rejects.toThrow('Author not found');
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled();

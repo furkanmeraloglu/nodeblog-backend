@@ -1,13 +1,11 @@
 import {jest, describe, beforeAll, afterEach, it, expect} from '@jest/globals';
 
-// Set up mocks and service reference
 let loginAuthor;
 let mockFindOne;
 let bcryptMock;
 let jwtMock;
 
 beforeAll(async () => {
-    // Mock the Author model
     mockFindOne = jest.fn();
 
     jest.unstable_mockModule('../../../models/author', () => ({
@@ -16,7 +14,6 @@ beforeAll(async () => {
         }
     }));
 
-    // Mock bcrypt - fix to match import style
     bcryptMock = {
         compare: jest.fn()
     };
@@ -24,7 +21,6 @@ beforeAll(async () => {
         default: bcryptMock
     }));
 
-    // Mock jwt - fix to match import style
     jwtMock = {
         sign: jest.fn().mockReturnValue('mocked_jwt_token')
     };
@@ -41,7 +37,6 @@ beforeAll(async () => {
         };
     });
 
-    // Mock system error exceptions
     jest.unstable_mockModule('../../../exceptions/systemErrorExceptions', () => ({
         NotFoundError: class NotFoundError extends Error {
             constructor(message) {
@@ -59,10 +54,8 @@ beforeAll(async () => {
         }
     }));
 
-    // Set up JWT_SECRET environment variable
     process.env.JWT_SECRET = 'test_secret';
 
-    // Import the service after mocking dependencies
     const authorLoginService = await import('../../../services/authorServices/authorLoginService');
     loginAuthor = authorLoginService.loginAuthor;
 });
@@ -74,7 +67,6 @@ describe('authorLoginService', () => {
 
     describe('loginAuthor', () => {
         it('should generate JWT token when login credentials are valid', async () => {
-            // Arrange
             const loginParams = {
                 email: 'test@example.com',
                 password: 'password123'
@@ -89,10 +81,8 @@ describe('authorLoginService', () => {
             mockFindOne.mockResolvedValue(mockAuthor);
             bcryptMock.compare.mockResolvedValue(true);
 
-            // Act
             const result = await loginAuthor(loginParams);
 
-            // Assert
             expect(mockFindOne).toHaveBeenCalledWith({email: loginParams.email});
             expect(bcryptMock.compare).toHaveBeenCalledWith(loginParams.password, mockAuthor.password);
             expect(jwtMock.sign).toHaveBeenCalledWith(
@@ -104,7 +94,6 @@ describe('authorLoginService', () => {
         });
 
         it('should throw NotFoundError if author with email is not found', async () => {
-            // Arrange
             const loginParams = {
                 email: 'nonexistent@example.com',
                 password: 'password123'
@@ -112,7 +101,6 @@ describe('authorLoginService', () => {
 
             mockFindOne.mockResolvedValue(null);
 
-            // Act & Assert
             await expect(loginAuthor(loginParams)).rejects.toThrow('Could not find an author with this email address');
             expect(mockFindOne).toHaveBeenCalledWith({email: loginParams.email});
             expect(bcryptMock.compare).not.toHaveBeenCalled();
@@ -120,7 +108,6 @@ describe('authorLoginService', () => {
         });
 
         it('should throw UnauthorizedError if password does not match', async () => {
-            // Arrange
             const loginParams = {
                 email: 'test@example.com',
                 password: 'wrongpassword'
@@ -135,7 +122,6 @@ describe('authorLoginService', () => {
             mockFindOne.mockResolvedValue(mockAuthor);
             bcryptMock.compare.mockResolvedValue(false);
 
-            // Act & Assert
             await expect(loginAuthor(loginParams)).rejects.toThrow('Wrong password!');
             expect(mockFindOne).toHaveBeenCalledWith({email: loginParams.email});
             expect(bcryptMock.compare).toHaveBeenCalledWith(loginParams.password, mockAuthor.password);
@@ -143,7 +129,6 @@ describe('authorLoginService', () => {
         });
 
         it('should propagate unexpected errors with status code 500', async () => {
-            // Arrange
             const loginParams = {
                 email: 'test@example.com',
                 password: 'password123'
@@ -152,7 +137,6 @@ describe('authorLoginService', () => {
             const unexpectedError = new Error('Database connection failed');
             mockFindOne.mockRejectedValue(unexpectedError);
 
-            // Act & Assert
             await expect(loginAuthor(loginParams)).rejects.toThrow('Database connection failed');
             const error = await loginAuthor(loginParams).catch(e => e);
             expect(error.statusCode).toBe(500);

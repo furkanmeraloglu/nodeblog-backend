@@ -1,13 +1,11 @@
 import { jest, describe, beforeAll, afterEach, it, expect } from '@jest/globals';
 
-// Mock variables
 let deleteAuthorAndAssociatedPosts;
 let mockFindById;
 let mockDeleteMany;
 let mockFindByIdAndDelete;
 
 beforeAll(async () => {
-  // Mock the Author model
   mockFindById = jest.fn();
   mockFindByIdAndDelete = jest.fn();
 
@@ -18,7 +16,6 @@ beforeAll(async () => {
     }
   }));
 
-  // Mock the Post model
   mockDeleteMany = jest.fn();
 
   jest.unstable_mockModule('../../../models/post.js', () => ({
@@ -27,7 +24,6 @@ beforeAll(async () => {
     }
   }));
 
-  // Mock system error exceptions
   jest.unstable_mockModule('../../../exceptions/systemErrorExceptions.js', () => ({
     NotFoundError: class NotFoundError extends Error {
       constructor(message) {
@@ -38,7 +34,6 @@ beforeAll(async () => {
     }
   }));
 
-  // Import the service after mocking dependencies
   const authorDeleteService = await import('../../../services/authorServices/authorDeleteService.js');
   deleteAuthorAndAssociatedPosts = authorDeleteService.deleteAuthorAndAssociatedPosts;
 });
@@ -50,7 +45,6 @@ describe('authorDeleteService', () => {
 
   describe('deleteAuthorAndAssociatedPosts', () => {
     it('should delete author and associated posts successfully', async () => {
-      // Arrange
       const authorId = '123456789';
       const params = { _id: authorId };
       const mockAuthor = { _id: authorId, name: 'Test Author' };
@@ -59,10 +53,8 @@ describe('authorDeleteService', () => {
       mockDeleteMany.mockResolvedValueOnce({ deletedCount: 2 });
       mockFindByIdAndDelete.mockResolvedValueOnce(mockAuthor);
 
-      // Act
       const result = await deleteAuthorAndAssociatedPosts(params);
 
-      // Assert
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockDeleteMany).toHaveBeenCalledWith({ author: authorId });
       expect(mockFindByIdAndDelete).toHaveBeenCalledWith(authorId);
@@ -70,13 +62,11 @@ describe('authorDeleteService', () => {
     });
 
     it('should throw NotFoundError if author does not exist', async () => {
-      // Arrange
       const authorId = '123456789';
       const params = { _id: authorId };
 
       mockFindById.mockResolvedValueOnce(null);
 
-      // Act & Assert
       await expect(deleteAuthorAndAssociatedPosts(params))
         .rejects.toThrow('Author not found');
 
@@ -86,7 +76,6 @@ describe('authorDeleteService', () => {
     });
 
     it('should propagate database errors', async () => {
-      // Arrange
       const authorId = '123456789';
       const params = { _id: authorId };
       const mockAuthor = { _id: authorId, name: 'Test Author' };
@@ -95,7 +84,6 @@ describe('authorDeleteService', () => {
       mockFindById.mockResolvedValueOnce(mockAuthor);
       mockDeleteMany.mockRejectedValueOnce(dbError);
 
-      // Act & Assert
       await expect(deleteAuthorAndAssociatedPosts(params))
         .rejects.toThrow('Database connection failed');
 
