@@ -1,0 +1,49 @@
+### Read All Authors
+GET http://localhost:3000/api/authors
+Accept: application/json
+
+### Read Author by ID
+GET http://localhost:3000/api/authors/67c0ea6a9189a724b358e4b5
+Accept: application/json
+
+### Update Author
+PATCH http://localhost:3000/api/authors/67c0ea6a9189a724b358e4b5
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "Elisa Simonis Karaca",
+    "email": "elisasimoniskaraca@karacalar.net",
+    "username": "aboovvv-elisa"
+}
+
+### Register Author
+POST http://localhost:3000/api/authors/register
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Furkan Meraloglu",
+  "email": "furkanmeraloglu@gmail.com",
+  "username": "streamexwupsy",
+  "password": "159852."
+}
+
+### Log In User
+POST http://localhost:3000/api/authors/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "furkanmeraloglu@gmail.com",
+    "password": "159852."
+}
+
+### Log out User
+POST http://localhost:3000/api/authors/logout
+Accept: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzBlZTcyNmJmNzAxMWI5Y2M1ZTRlMCIsImlhdCI6MTc0MDY5NzM5NiwiZXhwIjoxNzQwNzAwOTk2fQ.W4wdj4evp-nF3uYfomNWu6WpFR9E0BKyWDHZ-rQxgik
+
+### Delete User
+DELETE http://localhost:3000/api/authors/67c0ea6a9189a724b358e4b5
+Accept: application/json

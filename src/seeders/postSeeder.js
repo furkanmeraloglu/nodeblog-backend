@@ -9,8 +9,7 @@ dotenv.config();
 const seedPosts = async (num) => {
     const { DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME } = process.env;
     const mongoURI = `mongodb://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?authSource=admin`;
-    console.log(mongoURI);
-    /*await mongoose.connect(mongoURI);
+    await mongoose.connect(mongoURI);
     const authors = await Author.find();
     if (authors.length === 0) {
         console.error("No authors found. Please seed authors first.");
@@ -30,7 +29,7 @@ const seedPosts = async (num) => {
         });
         await post.save();
     }
-    await mongoose.connection.close();*/
+    await mongoose.connection.close();
 };
 
 seedPosts(20).then(() => {

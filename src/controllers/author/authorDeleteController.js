@@ -3,7 +3,7 @@ import {deleteAuthorAndAssociatedPosts} from "../../services/authorServices/auth
 
 export const deleteAuthor = async (req, res) => {
     try {
-        await deleteAuthorAndAssociatedPosts(req.body);
+        await deleteAuthorAndAssociatedPosts(req.params);
         res.status(200).json({
             message: 'Author has been deleted successfully'
         });
