@@ -9,7 +9,7 @@ beforeAll(async () => {
   mockFindById = jest.fn();
   mockFindByIdAndDelete = jest.fn();
 
-  jest.unstable_mockModule('../../../models/author.js', () => ({
+  jest.unstable_mockModule('../../../models/authorModel.js', () => ({
     default: {
       findById: mockFindById,
       findByIdAndDelete: mockFindByIdAndDelete
@@ -18,7 +18,7 @@ beforeAll(async () => {
 
   mockDeleteMany = jest.fn();
 
-  jest.unstable_mockModule('../../../models/post.js', () => ({
+  jest.unstable_mockModule('../../../models/postModel.js', () => ({
     default: {
       deleteMany: mockDeleteMany
     }
@@ -68,7 +68,7 @@ describe('authorDeleteService', () => {
       mockFindById.mockResolvedValueOnce(null);
 
       await expect(deleteAuthorAndAssociatedPosts(params))
-        .rejects.toThrow('Author not found');
+        .rejects.toThrow('AuthorModel not found');
 
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockDeleteMany).not.toHaveBeenCalled();

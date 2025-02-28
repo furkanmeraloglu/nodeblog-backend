@@ -1,12 +1,12 @@
-import Author from '../../models/author.js';
+import AuthorModel from '../../models/authorModel.js';
 import bcrypt from 'bcrypt';
 import {NotFoundError} from '../../exceptions/systemErrorExceptions.js';
 
 export const updateAuthorById = async (authorId, updateData) => {
     // Find author first to check existence
-    const author = await Author.findById(authorId);
+    const author = await AuthorModel.findById(authorId);
     if (!author) {
-        throw new NotFoundError('Author not found');
+        throw new NotFoundError('AuthorModel not found');
     }
 
     // Hash password if it's provided
@@ -18,7 +18,7 @@ export const updateAuthorById = async (authorId, updateData) => {
     updateData.updatedAt = new Date();
 
     // Update author and return updated document
-    return Author.findByIdAndUpdate(
+    return AuthorModel.findByIdAndUpdate(
         authorId,
         {$set: updateData},
         {new: true, runValidators: true}

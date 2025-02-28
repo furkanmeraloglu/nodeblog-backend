@@ -2,11 +2,11 @@
 GET http://localhost:3000/api/authors
 Accept: application/json
 
-### Read Author by ID
+### Read AuthorModel by ID
 GET http://localhost:3000/api/authors/67c0ea6a9189a724b358e4b5
 Accept: application/json
 
-### Update Author
+### Update AuthorModel
 PATCH http://localhost:3000/api/authors/67c0ea6a9189a724b358e4b5
 Accept: application/json
 Content-Type: application/json
@@ -17,7 +17,7 @@ Content-Type: application/json
     "username": "aboovvv-elisa"
 }
 
-### Register Author
+### Register AuthorModel
 POST http://localhost:3000/api/authors/register
 Accept: application/json
 Content-Type: application/json

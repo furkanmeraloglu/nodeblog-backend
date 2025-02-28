@@ -29,7 +29,7 @@ export const updateAuthor = async (req, res) => {
     const updatedAuthor = await updateAuthorById(authorId, updateData);
 
     res.status(200).json({
-      message: 'Author updated successfully',
+      message: 'AuthorModel updated successfully',
       author: updatedAuthor
     });
   } catch (err) {

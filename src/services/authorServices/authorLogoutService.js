@@ -1,9 +1,9 @@
-import Author from "../../models/author.js";
+import AuthorModel from "../../models/authorModel.js";
 import {NotFoundError, UnauthorizedError} from "../../exceptions/systemErrorExceptions.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import authorToken from "jsonwebtoken";
-import authorTokenBlacklist from "../../models/authorTokenBlacklist.js";
+import authorTokenBlacklistModel from "../../models/authorTokenBlacklistModel.js";
 
 
 export const logoutAndInvalidateAuthorToken = async (token) => {
@@ -34,7 +34,7 @@ export const extractToken = (req) => {
 const createAuthorTokenBlacklist = async (token) => {
     const decoded = jwt.decode(token);
     const tokenExpirationTimestamp = decoded.exp * 1000;
-    await authorTokenBlacklist.create({
+    await authorTokenBlacklistModel.create({
         token: token,
         expiresAt: new Date(tokenExpirationTimestamp),
     });

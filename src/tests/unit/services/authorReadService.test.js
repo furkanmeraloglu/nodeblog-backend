@@ -10,7 +10,7 @@ beforeAll(async () => {
     mockFind = jest.fn();
     mockFindById = jest.fn();
 
-    jest.unstable_mockModule('../../../models/author.js', () => ({
+    jest.unstable_mockModule('../../../models/authorModel.js', () => ({
         default: {
             find: mockFind,
             findById: mockFindById

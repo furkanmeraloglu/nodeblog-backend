@@ -1,4 +1,4 @@
-import Author from "../../models/author.js";
+import AuthorModel from "../../models/authorModel.js";
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -10,7 +10,7 @@ export const loginAuthor = async (params) => {
     const email = params.email;
     const password = params.password;
     try {
-        const author = await Author.findOne({ email });
+        const author = await AuthorModel.findOne({ email });
         if (!author) {
             throw new NotFoundError('Could not find an author with this email address');
         }

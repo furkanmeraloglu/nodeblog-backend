@@ -109,7 +109,7 @@ describe('authorUpdateService', () => {
 
       mockFindById.mockResolvedValue(null);
 
-      await expect(updateAuthorById(authorId, updateData)).rejects.toThrow('Author not found');
+      await expect(updateAuthorById(authorId, updateData)).rejects.toThrow('AuthorModel not found');
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled();
     });

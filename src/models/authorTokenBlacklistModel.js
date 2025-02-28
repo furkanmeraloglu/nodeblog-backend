@@ -15,6 +15,6 @@ const authorTokenBlacklistSchema = new mongoose.Schema({
     }
 });
 
-const authorTokenBlacklist = mongoose.model("AuthorTokenBlacklist", authorTokenBlacklistSchema);
+const authorTokenBlacklistModel = mongoose.model("AuthorTokenBlacklist", authorTokenBlacklistSchema);
 
-export default authorTokenBlacklist;
+export default authorTokenBlacklistModel;

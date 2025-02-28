@@ -1,10 +1,10 @@
-import Author from "../../models/author.js";
+import AuthorModel from "../../models/authorModel.js";
 import bcrypt from 'bcrypt';
 
 export const registerNewAuthor = async (params) => {
     const hashedPassword = await bcrypt.hash(params.password, 10);
 
-    const author = new Author({
+    const author = new AuthorModel({
         name: params.name,
         username: params.username,
         email: params.email,

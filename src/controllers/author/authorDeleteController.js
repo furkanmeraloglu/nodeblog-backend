@@ -5,7 +5,7 @@ export const deleteAuthor = async (req, res) => {
     try {
         await deleteAuthorAndAssociatedPosts(req.params);
         res.status(200).json({
-            message: 'Author has been deleted successfully'
+            message: 'AuthorModel has been deleted successfully'
         });
     } catch (err) {
         const statusCode = err.statusCode || 500;

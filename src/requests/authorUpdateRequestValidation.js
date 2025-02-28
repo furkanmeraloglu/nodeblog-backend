@@ -1,4 +1,3 @@
-// src/requests/authorUpdateRequestValidation.js
 import {body} from 'express-validator';
 
 export const validateAuthorUpdateRequest = [

@@ -1,9 +1,9 @@
-import Author from "../../models/author.js";
+import AuthorModel from "../../models/authorModel.js";
 import {NotFoundError} from "../../exceptions/systemErrorExceptions.js";
 
 export const getAllAuthors = async () => {
     try {
-        const authors = await Author.find();
+        const authors = await AuthorModel.find();
         if (!authors) {
             return [];
         }
@@ -15,9 +15,9 @@ export const getAllAuthors = async () => {
 
 export const getAuthorById = async (authorId) => {
     try {
-        const author = await Author.findById(authorId);
+        const author = await AuthorModel.findById(authorId);
         if (!author) {
-            throw new NotFoundError("Author not found");
+            throw new NotFoundError("AuthorModel not found");
         }
         return author;
     } catch (err) {
