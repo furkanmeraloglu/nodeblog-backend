@@ -2,7 +2,7 @@ import {deletePostById} from "../../services/postServices/postDeleteService.js";
 
 export const deletePost = async (req, res) => {
     try {
-        await deletePostById(req);
+        await deletePostById(req.params.postId);
         res.status(200).json({
             message: 'Post has been deleted successfully'
         });

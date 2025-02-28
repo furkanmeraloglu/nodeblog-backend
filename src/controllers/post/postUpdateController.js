@@ -9,8 +9,11 @@ export const updatePost = async (req, res) => {
         });
     }
     try {
-        const post = await updatePostById(req);
-        res.status(200).json(post);
+        const updatedPost = await updatePostById(req);
+        res.status(200).json({
+            message: 'Post updated successfully.',
+            post: updatedPost
+        });
     } catch (err) {
         const statusCode = err.statusCode || 500;
         res.status(statusCode).json({

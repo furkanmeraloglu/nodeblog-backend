@@ -46,14 +46,13 @@ describe('authorDeleteService', () => {
   describe('deleteAuthorAndAssociatedPosts', () => {
     it('should delete author and associated posts successfully', async () => {
       const authorId = '123456789';
-      const params = { authorId: authorId };
       const mockAuthor = { authorId: authorId, name: 'Test Author' };
 
       mockFindById.mockResolvedValueOnce(mockAuthor);
       mockDeleteMany.mockResolvedValueOnce({ deletedCount: 2 });
       mockFindByIdAndDelete.mockResolvedValueOnce(mockAuthor);
 
-      const result = await deleteAuthorAndAssociatedPosts(params);
+      const result = await deleteAuthorAndAssociatedPosts(authorId);
 
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockDeleteMany).toHaveBeenCalledWith({ authorId: authorId });
@@ -63,12 +62,11 @@ describe('authorDeleteService', () => {
 
     it('should throw NotFoundError if author does not exist', async () => {
       const authorId = '123456789';
-      const params = { authorId: authorId };
 
       mockFindById.mockResolvedValueOnce(null);
 
-      await expect(deleteAuthorAndAssociatedPosts(params))
-        .rejects.toThrow('AuthorModel not found');
+      await expect(deleteAuthorAndAssociatedPosts(authorId))
+        .rejects.toThrow('Author not found');
 
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockDeleteMany).not.toHaveBeenCalled();
@@ -77,14 +75,13 @@ describe('authorDeleteService', () => {
 
     it('should propagate database errors', async () => {
       const authorId = '123456789';
-      const params = { authorId: authorId };
       const mockAuthor = { authorId: authorId, name: 'Test Author' };
       const dbError = new Error('Database connection failed');
 
       mockFindById.mockResolvedValueOnce(mockAuthor);
       mockDeleteMany.mockRejectedValueOnce(dbError);
 
-      await expect(deleteAuthorAndAssociatedPosts(params))
+      await expect(deleteAuthorAndAssociatedPosts(authorId))
         .rejects.toThrow('Database connection failed');
 
       expect(mockFindById).toHaveBeenCalledWith(authorId);

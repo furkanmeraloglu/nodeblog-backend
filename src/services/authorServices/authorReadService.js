@@ -17,7 +17,7 @@ export const getAuthorById = async (authorId) => {
     try {
         const author = await AuthorModel.findById(authorId);
         if (!author) {
-            throw new NotFoundError("AuthorModel not found");
+            throw new NotFoundError("Author not found");
         }
         return author;
     } catch (err) {

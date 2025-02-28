@@ -1,9 +1,8 @@
 import {NotFoundError} from "../../exceptions/systemErrorExceptions.js";
 import PostModel from "../../models/postModel.js";
 
-export const deletePostById = async (req) => {
+export const deletePostById = async (postId) => {
     try {
-        const postId = req.params.postId;
         const post = await PostModel.findById(postId);
         if (!post) {
             throw new NotFoundError('Post not found');

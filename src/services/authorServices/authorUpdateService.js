@@ -2,25 +2,41 @@ import AuthorModel from '../../models/authorModel.js';
 import bcrypt from 'bcrypt';
 import {NotFoundError} from '../../exceptions/systemErrorExceptions.js';
 
-export const updateAuthorById = async (authorId, updateData) => {
-    // Find author first to check existence
+export const updateAuthorById = async (req) => {
+    const authorId = req.params.authorId;
     const author = await AuthorModel.findById(authorId);
     if (!author) {
-        throw new NotFoundError('AuthorModel not found');
+        throw new NotFoundError('Author not found');
     }
 
-    // Hash password if it's provided
+    try {
+        const authorUpdateData = setUpdateDataForAuthor(req);
+
+        return AuthorModel.findByIdAndUpdate(
+            authorId,
+            {$set: authorUpdateData},
+            {new: true, runValidators: true}
+        ).select('-password');
+    } catch (err) {
+        throw new Error(err);
+    }
+};
+
+const setUpdateDataForAuthor = async (req) => {
+    const {name, username, email, password, avatar} = req.body;
+    let updateData = {};
+
+    if (name) updateData.name = name;
+    if (username) updateData.username = username;
+    if (email) updateData.email = email;
+    if (password) updateData.password = password;
+    if (avatar) updateData.avatar = avatar;
+
     if (updateData.password) {
         updateData.password = await bcrypt.hash(updateData.password, 10);
     }
 
-    // Set update timestamp
     updateData.updatedAt = new Date();
 
-    // Update author and return updated document
-    return AuthorModel.findByIdAndUpdate(
-        authorId,
-        {$set: updateData},
-        {new: true, runValidators: true}
-    ).select('-password');
-};
+    return updateData;
+}

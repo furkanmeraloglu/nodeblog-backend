@@ -5,10 +5,10 @@ import PostModel from "../../models/postModel.js";
 export const updatePostById = async (req) => {
     const postId = req.params.postId;
     const post = await PostModel.findById(postId);
-
     if (!post) {
-        throw new NotFoundError('AuthorModel not found');
+        throw new NotFoundError('Author not found');
     }
+
     try {
         const postUpdateData = setUpdateDataForPost(req);
 
@@ -24,11 +24,12 @@ export const updatePostById = async (req) => {
 
 const setUpdateDataForPost = (req) => {
     const { title, content, authorId } = req.body;
-    const updateData = {};
+    let updateData = {};
 
     if (title) updateData.title = title;
     if (content) updateData.content = content;
     if (authorId) updateData.authorId = authorId;
 
+    updateData.updatedAt = new Date();
     return updateData;
 }
