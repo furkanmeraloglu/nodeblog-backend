@@ -1,4 +1,3 @@
-import AuthorModel from "../../models/authorModel.js";
 import {NotFoundError} from "../../exceptions/systemErrorExceptions.js";
 import PostModel from "../../models/postModel.js";
 
@@ -6,13 +5,13 @@ export const updatePostById = async (req) => {
     const postId = req.params.postId;
     const post = await PostModel.findById(postId);
     if (!post) {
-        throw new NotFoundError('Author not found');
+        throw new NotFoundError('Post not found');
     }
 
     try {
         const postUpdateData = setUpdateDataForPost(req);
 
-        return AuthorModel.findByIdAndUpdate(
+        return PostModel.findByIdAndUpdate(
             postId,
             {$set: postUpdateData},
             {new: true, runValidators: true}
