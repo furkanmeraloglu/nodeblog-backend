@@ -4,13 +4,14 @@ import {validatePostCreateRequest} from "../requests/postCreateRequestValidation
 import {validatePostUpdateRequest} from "../requests/postUpdateRequestValidation.js";
 import {getPost, getPosts} from "../controllers/post/postReadController.js";
 import {createPost} from "../controllers/post/postCreateController.js";
+import {updatePost} from "../controllers/post/postUpdateController.js";
 
 const router = express.Router();
 
 router.get('/', getPosts);
 router.get('/:postId', getPost);
 router.post('/', authMiddleware, validatePostCreateRequest, createPost);
-// router.patch('/:postId', authMiddleware, validatePostUpdateRequest, updatePost);
+router.patch('/:postId', authMiddleware, validatePostUpdateRequest, updatePost);
 // router.delete('/:postId', authMiddleware, deletePost);
 
 export default router;
