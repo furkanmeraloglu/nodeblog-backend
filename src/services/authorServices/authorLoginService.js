@@ -6,6 +6,8 @@ import { NotFoundError, UnauthorizedError } from "../../exceptions/systemErrorEx
 
 dotenv.config();
 
+const ACCESS_TOKEN_EXPIRY = 3600;
+
 export const loginAuthor = async (params) => {
     const email = params.email;
     const password = params.password;
@@ -18,9 +20,22 @@ export const loginAuthor = async (params) => {
         if (!isPasswordMatch) {
             throw new UnauthorizedError('Wrong password!');
         }
-        return jwt.sign({id: author._id}, process.env.JWT_SECRET, {
-            expiresIn: '1h'
-        });
+
+        return {
+            token_type: 'bearer',
+            access_token: jwt.sign(
+                {id: author._id},
+                process.env.JWT_SECRET,
+                {expiresIn: ACCESS_TOKEN_EXPIRY}
+            ),
+            refresh_token: jwt.sign(
+                {id: author._id, type: 'refresh'},
+                process.env.JWT_SECRET,
+                {expiresIn: '7d'}
+            ),
+            expires_in: ACCESS_TOKEN_EXPIRY
+        };
+
     } catch (err) {
         if (!err.statusCode) {
             err.statusCode = 500;
