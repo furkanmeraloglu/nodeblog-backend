@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { faker } from '@faker-js/faker';
-import Author from "../models/author.js";
+import AuthorModel from "../models/authorModel.js";
 import bcrypt from "bcrypt";
 import dotenv from "dotenv";
 
@@ -13,7 +13,7 @@ const seedAuthors = async (num) => {
 
     for (let i = 0; i < num; i++) {
         const hashedPassword = await bcrypt.hash('password', 10);
-        const author = new Author({
+        const author = new AuthorModel({
             name: faker.person.fullName(),
             username: faker.internet.username(),
             email: faker.internet.email(),

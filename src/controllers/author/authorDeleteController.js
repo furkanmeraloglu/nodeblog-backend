@@ -3,9 +3,10 @@ import {deleteAuthorAndAssociatedPosts} from "../../services/authorServices/auth
 
 export const deleteAuthor = async (req, res) => {
     try {
-        await deleteAuthorAndAssociatedPosts(req.params);
+        const authorId = req.params.authorId;
+        await deleteAuthorAndAssociatedPosts(authorId);
         res.status(200).json({
-            message: 'Author has been deleted successfully'
+            message: 'AuthorModel has been deleted successfully'
         });
     } catch (err) {
         const statusCode = err.statusCode || 500;

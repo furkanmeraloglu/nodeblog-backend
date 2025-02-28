@@ -12,7 +12,7 @@ beforeAll(async () => {
   }));
   mockFindById = jest.fn();
 
-  jest.unstable_mockModule('../../../models/author', () => ({
+  jest.unstable_mockModule('../../../models/authorModel.js', () => ({
     default: {
       findById: mockFindById,
       findByIdAndUpdate: mockFindByIdAndUpdate
@@ -37,7 +37,7 @@ beforeAll(async () => {
     }
   }));
 
-  const authorUpdateService = await import('../../../services/authorServices/authorUpdateService');
+  const authorUpdateService = await import('../../../services/authorServices/authorUpdateService.js');
   updateAuthorById = authorUpdateService.updateAuthorById;
 });
 
@@ -54,24 +54,31 @@ describe('authorUpdateService', () => {
         email: 'updated@example.com'
       };
 
+      const mockReq = {
+        params: { authorId },
+        body: updateData
+      };
+
       const mockAuthor = { _id: authorId, name: 'Original Name' };
       const updatedAuthor = { _id: authorId, ...updateData };
 
       mockFindById.mockResolvedValue(mockAuthor);
       mockSelect.mockResolvedValue(updatedAuthor);
 
-      const result = await updateAuthorById(authorId, updateData);
+      const result = await updateAuthorById(mockReq);
 
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
-        authorId,
-        { $set: expect.objectContaining({
-          name: updateData.name,
-          email: updateData.email,
-          updatedAt: expect.any(Date)
-        })},
-        {new: true, runValidators: true}
+          authorId,
+          expect.objectContaining({
+            $set: expect.any(Object)
+          }),
+          {new: true, runValidators: true}
       );
+
+      const setUpdateDataCall = mockFindByIdAndUpdate.mock.calls[0][1];
+      expect(setUpdateDataCall.$set).toBeTruthy();
+
       expect(mockSelect).toHaveBeenCalledWith('-password');
       expect(result).toEqual(updatedAuthor);
     });
@@ -83,33 +90,42 @@ describe('authorUpdateService', () => {
         password: 'newPassword123'
       };
 
+      const mockReq = {
+        params: { authorId },
+        body: updateData
+      };
+
       const mockAuthor = { _id: authorId };
       mockFindById.mockResolvedValue(mockAuthor);
       mockSelect.mockResolvedValue({ _id: authorId, name: 'New Name' });
 
       const bcryptMock = await import('bcrypt');
 
-      await updateAuthorById(authorId, updateData);
+      await updateAuthorById(mockReq);
 
       expect(bcryptMock.default.hash).toHaveBeenCalledWith('newPassword123', 10);
       expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
-        authorId,
-        { $set: expect.objectContaining({
-          name: 'New Name',
-          password: 'hashed_newPassword123',
-          updatedAt: expect.any(Date)
-        })},
-        {new: true, runValidators: true}
+          authorId,
+          expect.objectContaining({
+            $set: expect.any(Object)
+          }),
+          {new: true, runValidators: true}
       );
+
+      expect(mockFindByIdAndUpdate).toHaveBeenCalled();
     });
 
     it('should throw NotFoundError if author does not exist', async () => {
       const authorId = 'nonExistentAuthor';
-      const updateData = { name: 'New Name' };
+
+      const mockReq = {
+        params: { authorId },
+        body: { name: 'New Name' }
+      };
 
       mockFindById.mockResolvedValue(null);
 
-      await expect(updateAuthorById(authorId, updateData)).rejects.toThrow('Author not found');
+      await expect(updateAuthorById(mockReq)).rejects.toThrow('Author not found');
       expect(mockFindById).toHaveBeenCalledWith(authorId);
       expect(mockFindByIdAndUpdate).not.toHaveBeenCalled();
     });

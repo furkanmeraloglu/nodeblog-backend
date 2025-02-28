@@ -8,7 +8,7 @@ let jwtMock;
 beforeAll(async () => {
     mockFindOne = jest.fn();
 
-    jest.unstable_mockModule('../../../models/author', () => ({
+    jest.unstable_mockModule('../../../models/authorModel.js', () => ({
         default: {
             findOne: mockFindOne
         }
@@ -56,7 +56,7 @@ beforeAll(async () => {
 
     process.env.JWT_SECRET = 'test_secret';
 
-    const authorLoginService = await import('../../../services/authorServices/authorLoginService');
+    const authorLoginService = await import('../../../services/authorServices/authorLoginService.js');
     loginAuthor = authorLoginService.loginAuthor;
 });
 

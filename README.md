@@ -4,8 +4,8 @@ A RESTful API backend for a blog platform built with Node.js and Express, featur
 
 ## Features
 
-- Author authentication (register, login, logout)
-- Author management (CRUD operations)
+- AuthorModel authentication (register, login, logout)
+- AuthorModel management (CRUD operations)
 - Blog post management
 - Input validation
 - Error handling
@@ -46,8 +46,8 @@ A RESTful API backend for a blog platform built with Node.js and Express, featur
    ```text
    ├── src/
    │   ├── controllers/      # Route controllers
-   │   │   ├── author/       # Author-related controllers
-   │   │   └── post/         # Post-related controllers  
+   │   │   ├── author/       # AuthorModel-related controllers
+   │   │   └── post/         # PostModel-related controllers  
    │   ├── exceptions/       # Custom error classes
    │   ├── middleware/       # Express middleware
    │   ├── models/           # Mongoose models

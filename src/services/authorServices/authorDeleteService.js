@@ -1,13 +1,13 @@
-import Author from "../../models/author.js";
-import Post from "../../models/post.js";
+import AuthorModel from "../../models/authorModel.js";
+import PostModel from "../../models/postModel.js";
 import { NotFoundError } from "../../exceptions/systemErrorExceptions.js";
 
-export const deleteAuthorAndAssociatedPosts = async (params) => {
-    const author = await Author.findById(params.authorId);
+export const deleteAuthorAndAssociatedPosts = async (authorId) => {
+    const author = await AuthorModel.findById(authorId);
     if (!author) {
         throw new NotFoundError('Author not found');
     }
-    await Post.deleteMany({ authorId: params.authorId });
-    await Author.findByIdAndDelete(params.authorId);
+    await PostModel.deleteMany({ authorId: authorId });
+    await AuthorModel.findByIdAndDelete(authorId);
     return { success: true };
 };

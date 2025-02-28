@@ -11,7 +11,7 @@ beforeAll(async () => {
         save: mockSave
     }));
 
-    jest.unstable_mockModule('../../../models/author', () => ({
+    jest.unstable_mockModule('../../../models/authorModel.js', () => ({
         default: mockAuthorConstructor
     }));
 
@@ -32,7 +32,7 @@ beforeAll(async () => {
         }
     }));
 
-    const authorRegisterService = await import('../../../services/authorServices/authorRegisterService');
+    const authorRegisterService = await import('../../../services/authorServices/authorRegisterService.js');
     registerNewAuthor = authorRegisterService.registerNewAuthor;
 });
 
