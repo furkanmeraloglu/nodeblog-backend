@@ -2,11 +2,11 @@
 GET http://localhost:3000/api/authors
 Accept: application/json
 
-### Read AuthorModel by ID
+### Read Author by ID
 GET http://localhost:3000/api/authors/67c0ea6a9189a724b358e4b5
 Accept: application/json
 
-### Update AuthorModel
+### Update Author
 PATCH http://localhost:3000/api/authors/67c0ea6a9189a724b358e4b5
 Accept: application/json
 Content-Type: application/json
@@ -17,16 +17,16 @@ Content-Type: application/json
     "username": "aboovvv-elisa"
 }
 
-### Register AuthorModel
+### Register Author
 POST http://localhost:3000/api/authors/register
 Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "Furkan Meraloglu",
-  "email": "furkanmeraloglu@gmail.com",
-  "username": "streamexwupsy",
-  "password": "159852."
+  "name": "Emriye Meraloglu",
+  "email": "emriyemeraloglu@gmail.com",
+  "username": "emriyemeraloglu",
+  "password": "password."
 }
 
 ### Log In User
@@ -35,8 +35,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "email": "furkanmeraloglu@gmail.com",
-    "password": "159852."
+    "email": "emriyemeraloglu@gmail.com",
+    "password": "password."
 }
 
 ### Log out User

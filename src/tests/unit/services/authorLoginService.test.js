@@ -22,8 +22,13 @@ beforeAll(async () => {
     }));
 
     jwtMock = {
-        sign: jest.fn().mockReturnValue('mocked_jwt_token')
+        sign: jest.fn()
     };
+    // First call returns access token, second call returns refresh token
+    jwtMock.sign.mockImplementation((payload) => {
+        return payload.type === 'refresh' ? 'mocked_refresh_token' : 'mocked_access_token';
+    });
+
     jest.unstable_mockModule('jsonwebtoken', () => ({
         default: jwtMock
     }));
@@ -66,7 +71,7 @@ describe('authorLoginService', () => {
     });
 
     describe('loginAuthor', () => {
-        it('should generate JWT token when login credentials are valid', async () => {
+        it('should return token information when login credentials are valid', async () => {
             const loginParams = {
                 email: 'test@example.com',
                 password: 'password123'
@@ -85,12 +90,27 @@ describe('authorLoginService', () => {
 
             expect(mockFindOne).toHaveBeenCalledWith({email: loginParams.email});
             expect(bcryptMock.compare).toHaveBeenCalledWith(loginParams.password, mockAuthor.password);
-            expect(jwtMock.sign).toHaveBeenCalledWith(
+
+            expect(jwtMock.sign).toHaveBeenCalledTimes(2);
+            expect(jwtMock.sign).toHaveBeenNthCalledWith(
+                1,
                 {id: mockAuthor._id},
                 process.env.JWT_SECRET,
-                {expiresIn: '1h'}
+                {expiresIn: 3600}
             );
-            expect(result).toBe('mocked_jwt_token');
+            expect(jwtMock.sign).toHaveBeenNthCalledWith(
+                2,
+                {id: mockAuthor._id, type: 'refresh'},
+                process.env.JWT_SECRET,
+                {expiresIn: '7d'}
+            );
+
+            expect(result).toEqual({
+                token_type: 'bearer',
+                access_token: 'mocked_access_token',
+                refresh_token: 'mocked_refresh_token',
+                expires_in: 3600
+            });
         });
 
         it('should throw NotFoundError if author with email is not found', async () => {
@@ -137,8 +157,14 @@ describe('authorLoginService', () => {
             const unexpectedError = new Error('Database connection failed');
             mockFindOne.mockRejectedValue(unexpectedError);
 
-            await expect(loginAuthor(loginParams)).rejects.toThrow('Database connection failed');
-            const error = await loginAuthor(loginParams).catch(e => e);
+            let error;
+            try {
+                await loginAuthor(loginParams);
+            } catch (e) {
+                error = e;
+            }
+
+            expect(error.message).toBe('Database connection failed');
             expect(error.statusCode).toBe(500);
         });
     });

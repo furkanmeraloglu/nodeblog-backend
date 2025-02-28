@@ -36,6 +36,6 @@ const authorSchema = new mongoose.Schema({
     }
 });
 
-const AuthorModel = mongoose.model('AuthorModel', authorSchema);
+const AuthorModel = mongoose.model('Author', authorSchema);
 
 export default AuthorModel;
