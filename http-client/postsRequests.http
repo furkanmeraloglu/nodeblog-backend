@@ -1,0 +1,35 @@
+### Read All Posts
+GET http://localhost:3000/api/posts
+Accept: application/json
+
+### Read Post by ID
+GET http://localhost:3000/api/posts/67c18999f5758fc9c05c2854
+Accept: application/json
+
+### Update Post
+PATCH http://localhost:3000/api/posts/67c18999f5758fc9c05c2854
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzE4OTU0ZjU3NThmYzljMDVjMjg1MCIsImlhdCI6MTc0MDczNjkxMCwiZXhwIjoxNzQwNzQwNTEwfQ.ludMDQlv1zzkUPCBfIueKivSboIDipg9fCVTW64exfY
+
+{
+  "title": "Regional Impacts of Climate Change in Rural Areas",
+  "content": "Impacts of climate change have been drastically increased for a decade. Scientists warn people especially living in rural areas!",
+  "authorId": "67c18954f5758fc9c05c2850"
+}
+
+### Create Post
+POST http://localhost:3000/api/posts
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YzE4OTU0ZjU3NThmYzljMDVjMjg1MCIsImlhdCI6MTc0MDczNjkxMCwiZXhwIjoxNzQwNzQwNTEwfQ.ludMDQlv1zzkUPCBfIueKivSboIDipg9fCVTW64exfY
+
+{
+  "title": "Climate Change Strikes Again!",
+  "content": "Impacts of climate change have been drastically increased for a decade. Scientists warn people especially living in rural areas!",
+  "authorId": "67c18954f5758fc9c05c2850"
+}
+
+### Delete Post
+DELETE http://localhost:3000/api/posts/67c0ea6a9189a724b358e4b5
+Accept: application/json
