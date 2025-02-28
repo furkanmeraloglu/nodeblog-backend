@@ -12,7 +12,7 @@ beforeAll(async () => {
   }));
   mockFindById = jest.fn();
 
-  jest.unstable_mockModule('../../../models/author', () => ({
+  jest.unstable_mockModule('../../../models/authorModel.js', () => ({
     default: {
       findById: mockFindById,
       findByIdAndUpdate: mockFindByIdAndUpdate
@@ -37,7 +37,7 @@ beforeAll(async () => {
     }
   }));
 
-  const authorUpdateService = await import('../../../services/authorServices/authorUpdateService');
+  const authorUpdateService = await import('../../../services/authorServices/authorUpdateService.js');
   updateAuthorById = authorUpdateService.updateAuthorById;
 });
 

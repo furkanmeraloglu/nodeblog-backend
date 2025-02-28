@@ -46,8 +46,8 @@ describe('authorDeleteService', () => {
   describe('deleteAuthorAndAssociatedPosts', () => {
     it('should delete author and associated posts successfully', async () => {
       const authorId = '123456789';
-      const params = { _id: authorId };
-      const mockAuthor = { _id: authorId, name: 'Test Author' };
+      const params = { authorId: authorId };
+      const mockAuthor = { authorId: authorId, name: 'Test Author' };
 
       mockFindById.mockResolvedValueOnce(mockAuthor);
       mockDeleteMany.mockResolvedValueOnce({ deletedCount: 2 });
@@ -56,14 +56,14 @@ describe('authorDeleteService', () => {
       const result = await deleteAuthorAndAssociatedPosts(params);
 
       expect(mockFindById).toHaveBeenCalledWith(authorId);
-      expect(mockDeleteMany).toHaveBeenCalledWith({ author: authorId });
+      expect(mockDeleteMany).toHaveBeenCalledWith({ authorId: authorId });
       expect(mockFindByIdAndDelete).toHaveBeenCalledWith(authorId);
       expect(result).toEqual({ success: true });
     });
 
     it('should throw NotFoundError if author does not exist', async () => {
       const authorId = '123456789';
-      const params = { _id: authorId };
+      const params = { authorId: authorId };
 
       mockFindById.mockResolvedValueOnce(null);
 
@@ -77,8 +77,8 @@ describe('authorDeleteService', () => {
 
     it('should propagate database errors', async () => {
       const authorId = '123456789';
-      const params = { _id: authorId };
-      const mockAuthor = { _id: authorId, name: 'Test Author' };
+      const params = { authorId: authorId };
+      const mockAuthor = { authorId: authorId, name: 'Test Author' };
       const dbError = new Error('Database connection failed');
 
       mockFindById.mockResolvedValueOnce(mockAuthor);
@@ -88,7 +88,7 @@ describe('authorDeleteService', () => {
         .rejects.toThrow('Database connection failed');
 
       expect(mockFindById).toHaveBeenCalledWith(authorId);
-      expect(mockDeleteMany).toHaveBeenCalledWith({ author: authorId });
+      expect(mockDeleteMany).toHaveBeenCalledWith({ authorId: authorId });
       expect(mockFindByIdAndDelete).not.toHaveBeenCalled();
     });
   });
